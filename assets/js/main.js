@@ -18,7 +18,7 @@ function startCountDown() {
     var secondes = Math.floor(total_secondes - ((jours * 60 * 60 * 24 + heures * 60 * 60 + minutes * 60)));
     //Imprime la différence
     var content = document.querySelector('#count');
-    content.innerHTML = paddedFormat(jours) + '-' + paddedFormat(heures) + ':' + paddedFormat(minutes) + ':' + paddedFormat(secondes)
+    content.innerHTML = '<h1>'+paddedFormat(jours) + ' Jours' + '-' + paddedFormat(heures) + ':' + paddedFormat(minutes) + ':' + paddedFormat(secondes)+'</h1>'
     //fin du décompte
     if (total_secondes == 0) {
         content.textContent = "Décompte terminé"

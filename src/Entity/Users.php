@@ -26,7 +26,7 @@ class Users implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(type: 'string')]
     private $password;
 
-    #[ORM\Column(type: 'string', length: 10)]
+    #[ORM\Column(type: 'smallint')]
     private $sexe;
 
     #[ORM\Column(type: 'string', length: 255)]
@@ -108,7 +108,7 @@ class Users implements UserInterface, PasswordAuthenticatedUserInterface
         // $this->plainPassword = null;
     }
 
-    public function getSexe(): ?string
+    public function getSexe(): ?int
     {
         return $this->sexe;
     }
@@ -155,4 +155,5 @@ class Users implements UserInterface, PasswordAuthenticatedUserInterface
 
         return $this;
     }
+
 }
