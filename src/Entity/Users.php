@@ -38,6 +38,12 @@ class Users implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
     private $image;
 
+    #[ORM\Column(type: 'string', length: 255)]
+    private $country;
+
+    #[ORM\Column(type: 'integer')]
+    private $zip;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -152,6 +158,30 @@ class Users implements UserInterface, PasswordAuthenticatedUserInterface
     public function setImage(?string $image): self
     {
         $this->image = $image;
+
+        return $this;
+    }
+
+    public function getCountry(): ?string
+    {
+        return $this->country;
+    }
+
+    public function setCountry(string $country): self
+    {
+        $this->country = $country;
+
+        return $this;
+    }
+
+    public function getZip(): ?int
+    {
+        return $this->zip;
+    }
+
+    public function setZip(int $zip): self
+    {
+        $this->zip = $zip;
 
         return $this;
     }

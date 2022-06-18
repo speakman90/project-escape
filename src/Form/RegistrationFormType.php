@@ -10,6 +10,7 @@ use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Extension\Core\Type\CountryType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\IsTrue;
@@ -52,6 +53,32 @@ class RegistrationFormType extends AbstractType
                     new NotBlank()
                 ]
             ])
+            ->add('country', CountryType::class, [
+                'preferred_choices' => ['FR'],
+                'attr' => [
+                    'class' => 'form-control',
+                ],
+                'label' => 'Votre pays',
+                'label_attr' => [
+                    'class' => 'form-label'
+                ],
+            ])
+            ->add('zip', NumberType::class, [
+                'attr' => [
+                    'class' => 'form-control',
+                ],
+                'label' => 'Code postal',
+                'label_attr' => [
+                    'class' => 'form-label'
+                ],
+                'constraints' => [
+                    new NotBlank(),
+                    new length([
+                        'max' => 5,
+                        'maxMessage' => 'Vous devez remplir avec un code postal valable'
+                    ])
+                ]
+            ])
             ->add('adress', TextType::class, [
                 'attr' => [
                     'class' => 'form-control',
@@ -82,6 +109,9 @@ class RegistrationFormType extends AbstractType
             ])
             ->add('agreeTerms', CheckboxType::class, [
                 'label' => 'CGV',
+                'label_attr' => [
+                    'class' => 'form-label'
+                ],
                 'mapped' => false,
                 'constraints' => [
                     new IsTrue([
@@ -93,14 +123,20 @@ class RegistrationFormType extends AbstractType
                 // instead of being set onto the object directly,
                 // this is read and encoded in the controller
                 'mapped' => false,
-                'attr' => ['autocomplete' => 'new-password'],
+                'attr' => ['autocomplete' => 'new-password',
+                        'class' => 'form-control',
+                    ],
+                'label' => 'Mot de passe',
+                'label_attr' => [
+                    'class' => 'form-label'
+                ],
                 'constraints' => [
                     new NotBlank([
-                        'message' => 'Please enter a password',
+                        'message' => 'Rentré un mot de passe',
                     ]),
                     new Length([
                         'min' => 6,
-                        'minMessage' => 'Your password should be at least {{ limit }} characters',
+                        'minMessage' => 'Votre mot de passe doit comporté au minimum 6 caractères',
                         // max length allowed by Symfony for security reasons
                         'max' => 4096,
                     ]),
