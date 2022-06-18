@@ -102,7 +102,8 @@ class RegistrationFormType extends AbstractType
                 ],
                 'constraints' => [
                     new NotBlank(),
-                    new length(['min' => 10,
+                    new length(['min' => 9, 
+                    'max' => 10,
                     'minMessage' => 'Vous devez remplir un numéro de téléphone'
                     ])
                 ]

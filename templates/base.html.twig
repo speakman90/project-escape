@@ -16,6 +16,12 @@
         {% endblock %}
     </head>
     <body>
+        {% if app.user and app.user.isIsVerified == false %}
+            <div class="alert alert-warning" role="alert">
+                <p>Votre compte n'est pas vérifié, pour vérifié votre compte il suffit d'allez voir dans vos mails.</p>
+                <a href="{{ path('resend_check') }}">Renvoyer le lien d'activation</a>
+            </div>
+        {% endif %}
         {% block body %}{% endblock %}
     </body>
 </html>
