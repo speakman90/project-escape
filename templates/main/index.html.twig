@@ -6,14 +6,18 @@
 {% block title %}{% endblock %}
 
 {% block body %}
+
     <section class="main-index">
         <div class="container">
                 <div id="count"></div>
                 <div class="main-index-button">
+                {% if app.user %}
+                    <a href="/logout">Se déconnecter</a>
+                {% else %}
                     <a href="/register">S'inscrire</a>
                     <a href="/login">Se connecter</a>
+                {% endif %}
                 </div>
-                
             </div>
         </div>
     </section>

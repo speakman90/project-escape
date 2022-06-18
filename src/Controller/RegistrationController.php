@@ -22,58 +22,69 @@ class RegistrationController extends AbstractController
     #[Route('/register', name: 'app_register')]
     public function register(Request $request, UserPasswordHasherInterface $userPasswordHasher, UserAuthenticatorInterface $userAuthenticator, AppAuthenticator $authenticator, EntityManagerInterface $entityManager, SendMailService $mail, JWTService $jwt): Response
     {
-        $user = new Users();
-        $form = $this->createForm(RegistrationFormType::class, $user);
-        $form->handleRequest($request);
-        if ($form->isSubmitted() && $form->isValid()) {
-            // encode the plain password
-            $user->setPassword(
-            $userPasswordHasher->hashPassword(
+
+
+        $user = $this->getUser();
+
+        if(!$user) {
+            $user = new Users();
+            $form = $this->createForm(RegistrationFormType::class, $user);
+            $form->handleRequest($request);
+            if ($form->isSubmitted() && $form->isValid()) {
+                // encode the plain password
+                $user->setPassword(
+                    $userPasswordHasher->hashPassword(
+                        $user,
+                        $form->get('plainPassword')->getData()
+                    )
+                );
+
+                $entityManager->persist($user);
+                $entityManager->flush();
+                // do anything else you need here, like send an email
+
+                //On génére le token JWT
+                //On crée le header 
+                $header = [
+                    'typ' => 'JWT',
+                    'alg' => 'HS256'
+                ];
+
+                //On crée le payload
+                $payload = [
+                    'user_id' => $user->getId()
+                ];
+
+                //On génère le token
+                $token = $jwt->generate($header, $payload, $this->getParameter('app.jwtsecret'));
+
+
+                //On envoie le mail
+                $mail->send(
+                    'no-reply@monsite.net',
+                    $user->getEmail(),
+                    'Activation de votre compte sur un mystérieux site',
+                    'activate',
+                    compact('user', 'token')
+                );
+
+                return $userAuthenticator->authenticateUser(
                     $user,
-                    $form->get('plainPassword')->getData()
-                )
-            );
-            
-            $entityManager->persist($user);
-            $entityManager->flush();
-            // do anything else you need here, like send an email
+                    $authenticator,
+                    $request
+                );
+            }
 
-            //On génére le token JWT
-            //On crée le header 
-            $header = [
-                'typ' => 'JWT',
-                'alg' => 'HS256'
-            ];
-
-            //On crée le payload
-            $payload = [
-                'user_id' => $user->getId()
-            ];
-
-            //On génère le token
-            $token = $jwt->generate($header, $payload, $this->getParameter('app.jwtsecret'));
-
-
-            //On envoie le mail
-            $mail->send(
-                'no-reply@monsite.net',
-                $user->getEmail(),
-                'Activation de votre compte sur un mystérieux site',
-                'activate',
-                compact('user', 'token')
-            );
-
-            return $userAuthenticator->authenticateUser(
-                $user,
-                $authenticator,
-                $request
-            );
-            
+            return $this->render('registration/register.html.twig', [
+                'registrationForm' => $form->createView(),
+            ]);
+        } else {
+            $this->addFlash('danger', 'Vous devez être connecté pour accéder à cette page.');
+            return $this->redirectToRoute('app_main');
         }
 
-        return $this->render('registration/register.html.twig', [
-            'registrationForm' => $form->createView(),
-        ]);
+
+
     }
 
     #[Route('/verif/{token}', name:'verify_user')]
@@ -137,6 +148,5 @@ class RegistrationController extends AbstractController
 
         $this->addFlash('success', 'E-mail de vérification envoyé');
         return $this->redirectToRoute('app_main');
-
     }
 }
