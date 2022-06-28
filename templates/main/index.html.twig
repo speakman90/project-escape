@@ -11,9 +11,6 @@
         <div class="container">
                 <div id="count"></div>
                 <div class="main-index-button">
-                {% if  app.user.isIsVerified %}
-                    <a href="/register-shop">S'inscrire à la course au trésor</a>
-                {% endif %}
                 {% if app.user %}
                     <a href="/logout">Se déconnecter</a>
                 {% else %}

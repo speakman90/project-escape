@@ -3,12 +3,8 @@
 {% block title %}Register{% endblock %}
 
 {% block body %}
-
-    {% if app.user %}
-
-    {% else %}
         <h1>Inscription</h1>
-        <a href="{{ path('app_main') }}">Revenir à l'accueil</a>
+
         {{ form_start(registrationForm) }}
 
             {{ form_row(registrationForm.email) }}
@@ -24,5 +20,4 @@
             <button type="submit" class="btn">Register</button>
             
         {{ form_end(registrationForm) }}
-    {% endif %}
 {% endblock %}
