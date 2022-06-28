@@ -1,0 +1,28 @@
+{% extends 'base.html.twig' %}
+{% block javascripts_main %}
+    {{ encore_entry_script_tags('main') }}
+{% endblock %}
+
+{% block title %}{% endblock %}
+
+{% block body %}
+
+    <section class="main-index">
+        <div class="container">
+                <div id="count"></div>
+                <div class="main-index-button">
+                {% if  app.user.isIsVerified %}
+                    <a href="/register-shop">S'inscrire à la course au trésor</a>
+                {% endif %}
+                {% if app.user %}
+                    <a href="/logout">Se déconnecter</a>
+                {% else %}
+                    <a href="/register">S'inscrire</a>
+                    <a href="/login">Se connecter</a>
+                {% endif %}
+                </div>
+            </div>
+        </div>
+    </section>
+    
+{% endblock %}
