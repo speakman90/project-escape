@@ -11,6 +11,7 @@ use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\CountryType;
+use Symfony\Component\Form\Extension\Core\Type\BirthdayType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\IsTrue;
@@ -108,6 +109,23 @@ class RegistrationFormType extends AbstractType
                     ])
                 ]
             ])
+            ->add('birth', BirthdayType::class, [
+                'label' => 'Date de naissance',
+                'label_attr' => [
+                    'class' => 'form-label'
+                ],
+                'constraints' => [
+                    new notBlank(['message' => 'Vous devez rentré une date de naissance']),
+                ],
+                'placeholder'=> [
+                    'day'=>'Jour',
+                    'month'=>'Mois',
+                    'year'=>'Année'
+                ],
+                'format'=>'dd-MM-yyyy',
+                'years' => range((int) date('Y') - 120, date('Y')- 18),
+                'invalid_message'=>'Vous devez être majeur pour vous inscrire'
+            ])
             ->add('agreeTerms', CheckboxType::class, [
                 'label' => 'CGV',
                 'label_attr' => [
@@ -116,7 +134,7 @@ class RegistrationFormType extends AbstractType
                 'mapped' => false,
                 'constraints' => [
                     new IsTrue([
-                        'message' => 'You should agree to our terms.',
+                        'message' => 'Vous devez accepter les conditions pour créé votre compte',
                     ]),
                 ],
             ])
